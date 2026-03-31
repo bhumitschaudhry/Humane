@@ -21,6 +21,7 @@ Select your CLI:
   4. Gemini CLI      →  ~/.gemini/GEMINI.md
   5. Antigravity     →  ~/.gemini/AGENTS.md
   6. Cursor          →  ~/.cursor/rules/humane.mdc
+  7. All
 
 Enter number [1-6]:
 ```
@@ -56,9 +57,6 @@ Concretely, this means:
 | Antigravity | `~/.gemini/AGENTS.md` | Coding guidelines |
 | Cursor | `~/.cursor/rules/humane.mdc` | Coding guidelines |
 
-## Publish your own build
-
-See [NPX-GUIDE.md](./NPX-GUIDE.md) for instructions on publishing this package to npm so others can run `npx get-humane@latest`.
 
 ## License
 
