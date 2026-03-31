@@ -1,5 +1,5 @@
 ---
-name: simple-coder
+name: humane
 description: >
   Generates ready-to-install agent configuration files (CLAUDE.md, AGENTS.md, GEMINI.md,
   .opencode/instructions.md) that make a coding agent think spec-first and write maximally
@@ -7,11 +7,11 @@ description: >
   Codex CLI, Gemini CLI, or opencode to produce simpler output, plan before coding, or write
   code that a non-expert can read and edit. Trigger on phrases like: "make my coding agent
   write cleaner code", "spec-driven development", "readable code", "maintainable output",
-  "think before coding", "simple coder skill", or any request to configure a coding agent's
+  "think before coding", "humane coder skill", or any request to configure a coding agent's
   behavior around code quality or planning.
 ---
 
-# Simple Coder Skill
+# Humane Coder Skill
 
 Produces a **drop-in agent config file** that installs a spec-first, human-readable coding
 philosophy into any major coding agent.

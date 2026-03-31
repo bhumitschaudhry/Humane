@@ -1,4 +1,4 @@
-# Simple Coder Skill
+# Humane Coder Skill
 
 **For:** Claude Code · Codex CLI · Gemini CLI · OpenCode · any AI coding agent
 
@@ -30,7 +30,7 @@ Copy `SKILL.md` into your Claude Code skills directory:
 
 ```bash
 # The default location is ~/.claude/skills/ (or wherever your SKILLS_DIR points)
-cp SKILL.md ~/.claude/skills/simple-coder.md
+cp SKILL.md ~/.claude/skills/humane.md
 ```
 
 The skill will trigger automatically when you ask Claude Code to write or build something.
@@ -89,7 +89,7 @@ You can approve or correct before any code is written.
 ## File Layout
 
 ```
-simple-coder-skill/
+humane-skill/
 ├── SKILL.md              ← Claude Code skill file
 └── references/
     ├── AGENTS.md         ← Drop into project root for other agents
