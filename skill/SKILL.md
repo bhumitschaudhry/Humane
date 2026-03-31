@@ -1,126 +1,114 @@
 ---
 name: humane
 description: >
-  Generates ready-to-install agent configuration files (CLAUDE.md, AGENTS.md, GEMINI.md,
-  .opencode/instructions.md) that make a coding agent think spec-first and write maximally
-  readable, maintainable code. Use this skill whenever the user wants to configure Claude Code,
-  Codex CLI, Gemini CLI, or opencode to produce simpler output, plan before coding, or write
-  code that a non-expert can read and edit. Trigger on phrases like: "make my coding agent
-  write cleaner code", "spec-driven development", "readable code", "maintainable output",
-  "think before coding", "humane coder skill", or any request to configure a coding agent's
-  behavior around code quality or planning.
+  Provides two commands for building software in a human/maintainable way.
+  /humane-spec: Plans what needs to be built using a spec-first approach — explores the
+  codebase, produces a structured spec, and waits for approval before any code is written.
+  /humane-build: Codes an approved spec following strict human-readable coding principles.
+  Use when the user invokes /humane-spec or /humane-build, or asks to plan/build something
+  in a maintainable, spec-first way.
 ---
 
 # Humane Coder Skill
 
-Produces a **drop-in agent config file** that installs a spec-first, human-readable coding
-philosophy into any major coding agent.
-
-Two core principles — baked into the config as hard rules, not suggestions:
-
-1. **Spec-first** — the agent must articulate *what*, *why*, and *how* before writing a line.
-2. **Human-first simplicity** — code must be readable and editable by the person who asked for it,
-   not just by other engineers. Not vanilla/naïve — but never clever for cleverness's sake.
+Two commands. One principle: no code without a plan, and no plan without a human who can read it.
 
 ---
 
-## Step 1 — Identify the target agent(s)
+## `/humane-spec` — Plan before building
 
-Infer from context or ask the user:
+**Trigger:** user runs `/humane-spec [description of what to build]`
 
-| Agent | Config file | Notes |
-|---|---|---|
-| **Claude Code** | `CLAUDE.md` (project root) or `~/.claude/CLAUDE.md` (global) | Also reads `AGENTS.md` |
-| **OpenAI Codex CLI** | `AGENTS.md` (project root) | |
-| **Gemini CLI** | `GEMINI.md` (project root) | |
-| **opencode** | `.opencode/instructions.md` | |
-| **All agents / universal** | `AGENTS.md` | Claude Code + Codex both read this |
+### Step 1 — Understand the task
 
-If the user wants all agents covered, write a single `AGENTS.md` core and thin
-wrapper files for each agent that reference it. Or just write `AGENTS.md` if they're
-not sure — it covers the most ground.
+If the task is ambiguous, ask **one focused question** to clarify. Do not ask multiple questions.
+If the task is clear enough, proceed without asking.
 
----
+### Step 2 — Explore the codebase
 
-## Step 2 — Gather project context (improves output; optional)
+Before writing the spec, read relevant existing files:
+- What language, framework, and patterns are already in use?
+- What files are likely to be affected?
+- What conventions (naming, structure, error handling) does the existing code follow?
 
-Ask or infer:
-- Language / framework (Python, TypeScript, Go, etc.)
-- Who will maintain the code? (solo dev, non-technical founder, team, etc.)
-- Any pain points with current agent output? ("writes unreadable one-liners", "over-engineers", etc.)
-- Existing conventions to preserve?
+Match those conventions in the spec. Do not introduce new patterns without a reason.
 
-Write with sensible defaults if context is unavailable. Tailor aggressively when available.
+### Step 3 — Write and present the spec
 
----
+Produce this block and show it to the user:
 
-## Step 3 — Write the config file
-
-Read `references/config-template.md` for the full annotated template.
-Read `references/simplicity-rules.md` for the per-language simplicity ruleset.
-
-Every config file must contain these five sections:
-
-### A. SPEC PHASE — mandatory before any code
-The agent must produce a brief internal spec before touching files:
 ```
-## Spec
-- Goal: [one sentence — what does this code need to do?]
-- Approach: [2–5 bullet points — how will it do that?]
-- Simplicity check: [what's the simplest version that fully works?]
+SPEC
+  goal:            [one sentence — what does this code need to do?]
+  approach:        [2–5 bullets — how will it do that?]
+  simplest-version:[minimum implementation that fully solves the problem]
+  NOT doing:       [tempting complexity you are explicitly skipping, and why]
+  files:           [list of files to create or modify]
+  key-interfaces:  [function signatures or data shapes that matter]
+END SPEC
 ```
-Frame this as a *required thinking step* — the agent should do it silently unless the user
-asks to see it. If the agent skips this on a non-trivial task, that is a mistake.
 
-### B. SIMPLICITY RULES — hard rules, not preferences
-Pull from `references/simplicity-rules.md`. Key universal rules always included:
-- No abstraction until it's needed twice in actual code (not hypothetically)
-- Functions do one thing. Files do one thing.
-- Variable/function names say what they do — no single letters, no `data`, no `handler`
-- Prefer flat over nested
-- Delete code that isn't used
+The `NOT doing` line is not optional. Actively name the over-engineering you are rejecting.
 
-### C. NAMING & STRUCTURE
-- Names are self-documenting: `getUserById`, not `getUser` or `fetch`
-- Files named after their purpose: `auth-middleware.ts`, not `middleware.ts`
-- No `utils.js` dumping grounds — break into `format-date.js`, `validate-email.js`, etc.
+### Step 4 — Wait for approval
 
-### D. COMMENT POLICY
-- Comments explain *why*, not *what* (code explains what)
-- Every function/method gets a one-line summary comment
-- No commented-out dead code — delete it
-
-### E. CHANGE SAFETY
-- Edit the minimum code needed to accomplish the task
-- Before large refactors: state what will change and why, wait for confirmation
-- Never silently rename or restructure things that work
+Do **not** write any code. Present the spec and stop.
+The user must confirm or revise before `/humane-build` proceeds.
 
 ---
 
-## Step 4 — Self-check before delivering
+## `/humane-build` — Code the approved spec
 
-- [ ] Every section has a concrete, actionable rule (not vague advice like "write clean code")
-- [ ] Spec phase is described as **mandatory**, not suggested
-- [ ] Simplicity rules are framed as rules ("do X", "never Y"), not preferences ("try to X")
-- [ ] File is under 150 lines — readable in 2 minutes
-- [ ] No jargon the project owner won't understand
-- [ ] Tailored to the user's language/context if that info was available
+**Trigger:** user runs `/humane-build` after an approved spec, or `/humane-build [spec]`
 
----
+### Step 1 — Reference the spec
 
-## Step 5 — Deliver
+Restate the goal in one sentence. If no spec exists, run `/humane-spec` first.
 
-Present the config file(s) with:
-1. **Where to save it** — exact path
-2. **How to verify** — most agents print the config filename at startup; tell the user what to look for
-3. **One-line behavior summary** — "Your agent will now plan before coding and refuse to write
-   unreadable nested logic."
+### Step 2 — Write the code
 
-If multiple agents were requested, generate each file.
+Follow these rules. They are rules, not preferences.
 
----
+**Structure**
+- One function = one job. If describing it requires "and", split it.
+- One file = one purpose. Name files after what they do: `validate-email.ts`, not `utils.ts`.
+- Flat over nested. Use early returns and guard clauses at the top.
+- No abstraction until the same logic appears twice in real code.
 
-## Reference files
+**Naming**
+- Names say what the thing does: `getUserById`, `formatCurrency`, `isEmailValid`.
+- No single-letter names except `i`, `j` in simple loops.
+- No generic names: `data`, `result`, `handler`, `item`, `obj`, `temp`.
+- Booleans start with `is`, `has`, `can`, `should`.
+- Collections are plural: `users`, `productIds`.
 
-- `references/config-template.md` — Full annotated config template with comments
-- `references/simplicity-rules.md` — Complete simplicity ruleset organized by language
+**Size**
+- Functions: under 20 lines. Hard ceiling: 40. If longer, split by responsibility.
+- Files: under 200 lines. Hard ceiling: 400.
+
+**Comments**
+- Comments explain WHY, not WHAT. Code explains what.
+- Every function gets a one-line summary (docstring or comment above).
+- No commented-out code. Delete it.
+
+**Dependencies**
+- Do not add a library to do something 5 lines of native code handles.
+- If adding a dependency, state why the built-in option does not work here.
+
+**Change safety**
+- Edit the minimum code needed for this task.
+- Before a large refactor, state what changes and why, then wait for confirmation.
+- Never silently rename or restructure things that already work.
+
+For language-specific rules, read `references/simplicity-rules.md`.
+
+### Step 3 — Verify
+
+Run lint and tests if the project has them. Fix all failures before reporting done.
+
+### Step 4 — Report
+
+State what was built, mapped to each spec point:
+- goal: [what was implemented]
+- files created/modified: [list]
+- anything that deviated from the spec and why (should be rare)
