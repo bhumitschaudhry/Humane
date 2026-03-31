@@ -77,20 +77,27 @@ function main() {
   TARGETS.forEach((t, i) => {
     console.log(`  ${i + 1}. ${t.label}`);
   });
+  console.log(`  ${TARGETS.length + 1}. All               →  Install for all tools above`);
 
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  const maxOption = TARGETS.length + 1;
 
-  rl.question(`\nEnter number [1-${TARGETS.length}]: `, (answer) => {
+  rl.question(`\nEnter number [1-${maxOption}]: `, (answer) => {
     rl.close();
 
-    const index = parseInt(answer, 10) - 1;
-    if (isNaN(index) || index < 0 || index >= TARGETS.length) {
+    const choice = parseInt(answer, 10);
+    if (isNaN(choice) || choice < 1 || choice > maxOption) {
       console.error('Invalid selection. Please run again and enter a number from the list.');
       process.exit(1);
     }
 
+    const isAll = choice === maxOption;
+    const targets = isAll ? TARGETS : [TARGETS[choice - 1]];
+
     try {
-      install(TARGETS[index]);
+      for (const target of targets) {
+        install(target);
+      }
       console.log('Done.\n');
     } catch (err) {
       console.error(`\nInstall failed: ${err.message}`);
