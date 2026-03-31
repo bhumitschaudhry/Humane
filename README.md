@@ -21,9 +21,9 @@ Select your CLI:
   4. Gemini CLI      →  ~/.gemini/GEMINI.md
   5. Antigravity     →  ~/.gemini/AGENTS.md
   6. Cursor          →  ~/.cursor/rules/humane.mdc
-  7. All
+  7. All               →  Install for all tools above
 
-Enter number [1-6]:
+Enter number [1-7]:
 ```
 
 The installer creates the destination directory if it does not exist, then copies the skill files. No other changes are made to your system.
