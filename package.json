@@ -1,0 +1,26 @@
+{
+  "name": "get-humane",
+  "version": "1.0.0",
+  "description": "Install the Humane coding skill for AI CLI agents",
+  "bin": {
+    "get-humane": "./bin/install.js"
+  },
+  "files": [
+    "bin/",
+    "skill/"
+  ],
+  "engines": {
+    "node": ">=14"
+  },
+  "license": "MIT",
+  "keywords": [
+    "ai",
+    "skill",
+    "coding",
+    "agent",
+    "factory",
+    "claude",
+    "codex",
+    "gemini"
+  ]
+}
