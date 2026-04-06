@@ -192,6 +192,89 @@ set -euo pipefail
 
 ---
 
+## C++
+
+```markdown
+## C++-Specific Rules
+
+### Structure
+- Favor composition over inheritance. Keep hierarchies shallow (no more than 2 levels).
+- One class = one responsibility. If a class exceeds 200 lines, it's doing too much.
+- Header-only templates are okay for small utilities; otherwise, separate `.hpp` and `.cpp`.
+
+### Safety
+- RAII is mandatory. Use `std::unique_ptr` and `std::shared_ptr` instead of raw `new`/`delete`.
+- `const` everything that isn't modified. It's the most important keyword.
+- No `using namespace std;`. Be explicit with `std::`.
+
+### Naming
+- `camelCase` for variables and functions, `PascalCase` for classes, `UPPER_CASE` for macros.
+- Member variables prefix with `m_` or suffix with `_`: `m_user_id` or `user_id_`.
+
+### What to avoid
+- Preprocessor macros for constants — use `constexpr`.
+- C-style casts — use `static_cast`, `const_cast`, etc.
+- Manual memory management unless you're writing a low-level allocator.
+```
+
+---
+
+## C#
+
+```markdown
+## C#-Specific Rules
+
+### Structure
+- Use `records` for immutable data shapes.
+- Use `async/await` for any I/O. Use `ValueTask` for high-frequency async operations.
+- Prefer LINQ for data transformations; use `foreach` when there are side effects.
+
+### Safety
+- Enable nullable reference types and treat warnings as errors.
+- Use `using` declarations (e.g., `using var stream = ...`) for `IDisposable` resources.
+- Use `sealed` by default for classes to prevent unintended inheritance.
+
+### Naming
+- `PascalCase` for classes, methods, and properties. `camelCase` for local variables.
+- Interfaces start with `I`: `IUserRepository`.
+- Booleans start with `Is`, `Has`, `Can`: `IsAuthorized`.
+
+### What to avoid
+- Deeply nested `if` statements — use guard clauses and early returns.
+- Broad `try-catch` blocks — catch specific exceptions.
+- Static classes for things that should be injected via DI.
+```
+
+---
+
+## Ruby
+
+```markdown
+## Ruby-Specific Rules
+
+### Structure
+- One module/class = one job. Keep methods under 10 lines.
+- Use `attr_reader` for read-only access. Avoid `attr_accessor` unless you need it.
+- Prefer blocks and enumerables (`map`, `select`, `reduce`) over manual loops.
+
+### Naming
+- `snake_case` for everything except classes (`PascalCase`) and constants (`UPPER_CASE`).
+- Predicate methods end in `?`: `logged_in?`, `empty?`.
+- Mutating methods that might surprise the user end in `!`: `save!`, `update!`.
+
+### Specific patterns
+- Use `Hash` for small sets of data; use `Struct` or `Data.define` for structured data.
+- Handle exceptions only when you can recover from them. Don't use `rescue nil`.
+- Use `freeze` on strings used as constants.
+
+### What to avoid
+- Global variables (`$global`).
+- Monkey-patching core classes unless you're building a framework (and even then, think twice).
+- Deeply nested hashes — extract to a value object.
+```
+
+---
+
 ## How to select rules
 
 When writing the config for a user:

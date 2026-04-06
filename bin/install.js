@@ -42,6 +42,16 @@ const TARGETS = [
     dest: path.join(os.homedir(), '.cursor', 'rules', 'humane.mdc'),
     mode: 'file',
   },
+  {
+    label: 'Windsurf        →  ~/.windsurf/rules/humane.mdc',
+    dest: path.join(os.homedir(), '.windsurf', 'rules', 'humane.mdc'),
+    mode: 'file',
+  },
+  {
+    label: 'Cline           →  ~/.cline/rules/humane.mdc',
+    dest: path.join(os.homedir(), '.cline', 'rules', 'humane.mdc'),
+    mode: 'file',
+  },
 ];
 
 /** Recursively copy a directory. */

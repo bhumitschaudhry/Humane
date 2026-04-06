@@ -35,6 +35,8 @@ Match those conventions in the spec. Do not introduce new patterns without a rea
 
 ### Step 3 — Write and present the spec
 
+If **GSD tools** are available (e.g., `gsd_plan_milestone`, `gsd_plan_slice`), use them to structure the project. The spec above then becomes the **vision** and **goal** for a GSD milestone or slice.
+
 Produce this block and show it to the user:
 
 ```

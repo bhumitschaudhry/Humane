@@ -21,9 +21,11 @@ Select your CLI:
   4. Gemini CLI      →  ~/.gemini/GEMINI.md
   5. Antigravity     →  ~/.gemini/AGENTS.md
   6. Cursor          →  ~/.cursor/rules/humane.mdc
-  7. All               →  Install for all tools above
+  7. Windsurf        →  ~/.windsurf/rules/humane.mdc
+  8. Cline           →  ~/.cline/rules/humane.mdc
+  9. All               →  Install for all tools above
 
-Enter number [1-7]:
+Enter number [1-9]:
 ```
 
 The installer creates the destination directory if it does not exist, then copies the skill files. No other changes are made to your system.
@@ -63,6 +65,8 @@ Runs lint and tests if the project has them, then reports what was built mapped 
 | Gemini CLI | `~/.gemini/GEMINI.md` | Coding guidelines |
 | Antigravity | `~/.gemini/AGENTS.md` | Coding guidelines |
 | Cursor | `~/.cursor/rules/humane.mdc` | Coding guidelines |
+| Windsurf | `~/.windsurf/rules/humane.mdc` | Coding guidelines |
+| Cline | `~/.cline/rules/humane.mdc` | Coding guidelines |
 
 
 ## License
