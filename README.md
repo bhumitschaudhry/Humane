@@ -55,6 +55,21 @@ The agent implements exactly what was specced, following hard rules:
 
 Runs lint and tests if the project has them, then reports what was built mapped to each spec point.
 
+## Validator
+
+You can also run the Humane validator manually on your codebase:
+
+```bash
+npx get-humane-validator@latest .
+```
+
+(Or, if you installed it locally, use `validate-humane .`)
+
+The validator checks for:
+-   File length (under 200 lines).
+-   Function length (under 20 lines).
+-   Explicit typing (e.g., no `any` in TypeScript).
+
 ## Supported CLIs
 
 | CLI | Install path | Format |

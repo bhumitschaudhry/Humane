@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Language-specific rules for **C++**, **C#**, and **Ruby** in `simplicity-rules.md`.
 -   **GSD Integration** in `SKILL.md` (if GSD tools are available).
 -   `CONTRIBUTING.md` and `CHANGELOG.md`.
+-   **`validate-humane.js` script** for basic code quality checks.
 
 ### Improved
 -   Expanded `README.md` with updated supported CLIs.

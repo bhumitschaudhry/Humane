@@ -3,7 +3,8 @@
   "version": "2.1.0",
   "description": "Install the Humane coding skill for AI CLI agents",
   "bin": {
-    "get-humane": "bin/install.js"
+    "get-humane": "bin/install.js",
+    "validate-humane": "bin/validate-humane.js"
   },
   "files": [
     "bin/",
