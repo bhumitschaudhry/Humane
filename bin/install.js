@@ -2,10 +2,11 @@
 
 'use strict';
 
-const readline = require('readline');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const { intro, outro, select, multiselect, spinner, note, isCancel, cancel, text } = require('@clack/prompts');
+const pc = require('picocolors');
 
 const SKILL_NAME = 'humane';
 const SKILL_DIR = path.join(__dirname, '..', 'skill');
@@ -13,44 +14,66 @@ const AGENTS_MD = path.join(SKILL_DIR, 'assets', 'AGENTS.md');
 
 const TARGETS = [
   {
-    label: 'Factory Droid   →  ~/.factory/skills/humane/',
-    dest: path.join(os.homedir(), '.factory', 'skills', SKILL_NAME),
+    value: 'factory',
+    label: 'Factory Droid',
+    hint: '~/.factory/skills/humane/',
+    dest: (home) => path.join(home, '.factory', 'skills', SKILL_NAME),
     mode: 'skill',
   },
   {
-    label: 'Claude Code     →  ~/.claude/skills/humane/',
-    dest: path.join(os.homedir(), '.claude', 'skills', SKILL_NAME),
+    value: 'claude',
+    label: 'Claude Code',
+    hint: '~/.claude/skills/humane/',
+    dest: (home) => path.join(home, '.claude', 'skills', SKILL_NAME),
     mode: 'skill',
   },
   {
-    label: 'OpenAI Codex    →  ~/.codex/AGENTS.md',
-    dest: path.join(os.homedir(), '.codex', 'AGENTS.md'),
+    value: 'codex',
+    label: 'OpenAI Codex',
+    hint: '~/.codex/AGENTS.md',
+    dest: (home) => path.join(home, '.codex', 'AGENTS.md'),
     mode: 'file',
   },
   {
-    label: 'Gemini CLI      →  ~/.gemini/GEMINI.md',
-    dest: path.join(os.homedir(), '.gemini', 'GEMINI.md'),
+    value: 'gemini',
+    label: 'Gemini CLI',
+    hint: '~/.gemini/GEMINI.md',
+    dest: (home) => path.join(home, '.gemini', 'GEMINI.md'),
     mode: 'file',
   },
   {
-    label: 'Antigravity     →  ~/.gemini/AGENTS.md',
-    dest: path.join(os.homedir(), '.gemini', 'AGENTS.md'),
+    value: 'antigravity',
+    label: 'Antigravity',
+    hint: '~/.gemini/AGENTS.md',
+    dest: (home) => path.join(home, '.gemini', 'AGENTS.md'),
     mode: 'file',
   },
   {
-    label: 'Cursor          →  ~/.cursor/rules/humane.mdc',
-    dest: path.join(os.homedir(), '.cursor', 'rules', 'humane.mdc'),
+    value: 'cursor',
+    label: 'Cursor',
+    hint: '~/.cursor/rules/humane.mdc',
+    dest: (home) => path.join(home, '.cursor', 'rules', 'humane.mdc'),
     mode: 'file',
   },
   {
-    label: 'Windsurf        →  ~/.windsurf/rules/humane.mdc',
-    dest: path.join(os.homedir(), '.windsurf', 'rules', 'humane.mdc'),
+    value: 'windsurf',
+    label: 'Windsurf',
+    hint: '~/.windsurf/rules/humane.mdc',
+    dest: (home) => path.join(home, '.windsurf', 'rules', 'humane.mdc'),
     mode: 'file',
   },
   {
-    label: 'Cline           →  ~/.cline/rules/humane.mdc',
-    dest: path.join(os.homedir(), '.cline', 'rules', 'humane.mdc'),
+    value: 'cline',
+    label: 'Cline',
+    hint: '~/.cline/rules/humane.mdc',
+    dest: (home) => path.join(home, '.cline', 'rules', 'humane.mdc'),
     mode: 'file',
+  },
+  {
+    value: 'custom',
+    label: 'Custom path...',
+    hint: 'Enter a custom path',
+    mode: 'custom',
   },
 ];
 
@@ -69,51 +92,78 @@ function copyDir(src, dest) {
 }
 
 /** Install the skill or guidelines file to the chosen destination. */
-function install(target) {
-  if (target.mode === 'skill') {
-    copyDir(SKILL_DIR, target.dest);
-    console.log(`\nInstalled to: ${target.dest}`);
+function install(target, dest) {
+  const finalDest = typeof dest === 'string' ? dest : target.dest(os.homedir());
+  if (target.mode === 'skill' || target.mode === 'custom') {
+    // For custom, if it's a directory we'll copy the skill, if it looks like a file we'll copy AGENTS.md
+    // To keep it simple for 'custom', if it ends with .md or .mdc we treat it as a file.
+    if (finalDest.endsWith('.md') || finalDest.endsWith('.mdc')) {
+      fs.mkdirSync(path.dirname(finalDest), { recursive: true });
+      fs.copyFileSync(AGENTS_MD, finalDest);
+    } else {
+      copyDir(SKILL_DIR, finalDest);
+    }
   } else {
-    fs.mkdirSync(path.dirname(target.dest), { recursive: true });
-    fs.copyFileSync(AGENTS_MD, target.dest);
-    console.log(`\nInstalled to: ${target.dest}`);
+    fs.mkdirSync(path.dirname(finalDest), { recursive: true });
+    fs.copyFileSync(AGENTS_MD, finalDest);
+  }
+  return finalDest;
+}
+
+async function main() {
+  intro(pc.bgCyan(pc.black(' Humane Skill Installer ')));
+
+  const selectedTargetValues = await multiselect({
+    message: 'Select AI tools to install Humane for:',
+    options: TARGETS.map(t => ({ value: t.value, label: t.label, hint: t.hint })),
+    required: true,
+  });
+
+  if (isCancel(selectedTargetValues)) {
+    cancel('Installation cancelled.');
+    process.exit(0);
+  }
+
+  const installs = [];
+  
+  for (const value of selectedTargetValues) {
+    const target = TARGETS.find(t => t.value === value);
+    if (value === 'custom') {
+      const customPath = await text({
+        message: 'Enter custom installation path:',
+        placeholder: 'e.g. ./docs/HUMANE.md or ~/.my-ai/rules/',
+        validate: (v) => v.trim() === '' ? 'Path is required' : undefined,
+      });
+
+      if (isCancel(customPath)) {
+        cancel('Installation cancelled.');
+        process.exit(0);
+      }
+      installs.push({ target, dest: customPath.trim() });
+    } else {
+      installs.push({ target, dest: null });
+    }
+  }
+
+  const s = spinner();
+  s.start('Installing Humane skill...');
+
+  try {
+    const results = [];
+    for (const { target, dest } of installs) {
+      const finalPath = install(target, dest);
+      results.push(`• ${target.label === 'Custom path...' ? 'Custom' : target.label}: ${pc.dim(finalPath)}`);
+    }
+
+    s.stop('Installation complete!');
+
+    note(results.join('\n'), 'Installed Locations');
+    outro(pc.green('Done! Your AI agents are now more humane.'));
+  } catch (err) {
+    s.stop('Installation failed', 1);
+    console.error(pc.red(`\nError: ${err.message}`));
+    process.exit(1);
   }
 }
 
-function main() {
-  console.log('\nHumane Skill Installer\n');
-  console.log('Select your CLI:\n');
-
-  TARGETS.forEach((t, i) => {
-    console.log(`  ${i + 1}. ${t.label}`);
-  });
-  console.log(`  ${TARGETS.length + 1}. All               →  Install for all tools above`);
-
-  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-  const maxOption = TARGETS.length + 1;
-
-  rl.question(`\nEnter number [1-${maxOption}]: `, (answer) => {
-    rl.close();
-
-    const choice = parseInt(answer, 10);
-    if (isNaN(choice) || choice < 1 || choice > maxOption) {
-      console.error('Invalid selection. Please run again and enter a number from the list.');
-      process.exit(1);
-    }
-
-    const isAll = choice === maxOption;
-    const targets = isAll ? TARGETS : [TARGETS[choice - 1]];
-
-    try {
-      for (const target of targets) {
-        install(target);
-      }
-      console.log('Done.\n');
-    } catch (err) {
-      console.error(`\nInstall failed: ${err.message}`);
-      process.exit(1);
-    }
-  });
-}
-
-main();
+main().catch(console.error);

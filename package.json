@@ -1,6 +1,6 @@
 {
   "name": "get-humane",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Install the Humane coding skill for AI CLI agents",
   "bin": {
     "get-humane": "bin/install.js",
@@ -23,5 +23,9 @@
     "claude",
     "codex",
     "gemini"
-  ]
+  ],
+  "dependencies": {
+    "@clack/prompts": "^1.2.0",
+    "picocolors": "^1.1.1"
+  }
 }
