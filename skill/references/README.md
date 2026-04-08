@@ -9,14 +9,17 @@ code like a minimalist — producing output that *you* can read, understand, and
 
 ## What It Does
 
-Most coding agents jump straight to code. This skill adds two steps first:
+Most coding agents jump straight to code. This skill adds three steps:
 
-1. **Spec phase** — The agent clarifies the goal, writes a plain-language spec,
+1. **Spec phase (`/humane-spec`)** — The agent clarifies the goal, writes a plain-language spec,
    and checks for ambiguity before writing a single line.
 
-2. **Simplicity phase** — The code is written to a strict set of readability rules:
+2. **Simplicity phase (`/humane-build`)** — The code is written to a strict set of readability rules:
    self-explanatory names, small focused functions, config at the top, human-readable
    errors, minimal dependencies.
+
+3. **Humanize phase (`/humanize-codebase`)** — The agent analyzes the codebase for anti-patterns
+   and applies refactors to improve maintainability and follow the "Humane" rules.
 
 The result: code that looks like a thoughtful human wrote it for another human to maintain.
 

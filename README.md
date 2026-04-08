@@ -1,6 +1,6 @@
 # Humane
 
-A coding skill for AI agents that enforces spec-first, human-readable code. Install it once and your agent gains two commands — `/humane-spec` to plan before touching any file, and `/humane-build` to code the approved plan following strict human-readable rules.
+A coding skill for AI agents that enforces spec-first, human-readable code. Install it once and your agent gains three commands — `/humane-spec` to plan before touching any file, `/humane-build` to code the approved plan following strict human-readable rules, and `/humanize-codebase` to refactor for maintainability.
 
 ## Install
 
@@ -32,7 +32,7 @@ The installer creates the destination directory if it does not exist, then copie
 
 ## What it does
 
-Two commands. One principle: no code without a plan, and no plan without a human who can read it.
+Three commands. One principle: no code without a plan, and no plan without a human who can read it.
 
 **`/humane-spec`** — Plan before building.
 The agent explores your codebase, then produces a structured spec:
@@ -54,6 +54,13 @@ The agent implements exactly what was specced, following hard rules:
 - Edit the minimum code needed. Ask before large refactors.
 
 Runs lint and tests if the project has them, then reports what was built mapped to each spec point.
+
+**`/humanize-codebase`** — Refactor for maintainability.
+The agent analyzes your codebase against the "Humane" rules and proposes/applies refactors:
+- Splits long functions (> 40 lines) and files (> 400 lines).
+- Renames generic variables (`data`, `item`, `handler`) to descriptive names.
+- Flattens deep nesting using guard clauses.
+- Adds missing one-line summaries to exported functions.
 
 ## Validator
 

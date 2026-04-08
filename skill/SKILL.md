@@ -1,17 +1,19 @@
 ---
 name: humane
 description: >
-  Provides two commands for building software in a human/maintainable way.
+  Provides three commands for building software in a human/maintainable way.
   /humane-spec: Plans what needs to be built using a spec-first approach — explores the
   codebase, produces a structured spec, and waits for approval before any code is written.
   /humane-build: Codes an approved spec following strict human-readable coding principles.
-  Use when the user invokes /humane-spec or /humane-build, or asks to plan/build something
-  in a maintainable, spec-first way.
+  /humanize-codebase: Analyzes the codebase and proposes/applies refactors to make it more
+  maintainable and follow "Humane" principles.
+  Use when the user invokes /humane-spec, /humane-build, or /humanize-codebase, or asks to
+  plan/build/refactor something in a maintainable, spec-first way.
 ---
 
 # Humane Coder Skill
 
-Two commands. One principle: no code without a plan, and no plan without a human who can read it.
+Three commands. One principle: no code without a plan, and no plan without a human who can read it.
 
 ---
 
@@ -114,3 +116,44 @@ State what was built, mapped to each spec point:
 - goal: [what was implemented]
 - files created/modified: [list]
 - anything that deviated from the spec and why (should be rare)
+
+---
+
+## `/humanize-codebase` — Refactor for maintainability
+
+**Trigger:** user runs `/humanize-codebase` or asks to "improve codebase health".
+
+### Step 1 — Audit the codebase
+
+Scan for code that violates the "Humane" rules:
+- **Functions > 40 lines.** Find logic that should be split.
+- **Generic/bad names.** Identify `data`, `item`, `handler`, `temp`, single letters (not `i`, `j`).
+- **Deep nesting.** Look for `if` statements nested 3+ levels deep — propose guard clauses.
+- **Large files > 400 lines.** Find files that should be split by responsibility.
+- **Missing summaries.** Identify exported functions without docstrings/summaries.
+
+### Step 2 — Propose a prioritization list
+
+Group findings by impact and present them to the user. **Pick the top 5-10 findings only.**
+
+```
+HUMANIZE REPORT
+  1. Split [functionName] in [fileName] (currently [N] lines).
+  2. Rename generic variables in [fileName]: [list].
+  3. Extract [sub-logic] from [fileName] into a new file.
+  4. Add missing docstrings to [N] functions in [dir].
+  5. Refactor nested logic in [functionName] using guard clauses.
+```
+
+Wait for the user to select which ones to address.
+
+### Step 3 — Refactor incrementally
+
+Apply the changes one by one. For each change:
+1. Briefly state what you're doing and why (mapping it to the "Humane" rules).
+2. Apply the edit.
+3. Verify with lint and tests if available.
+
+### Step 4 — Final summary
+
+List the files changed and the rules that were applied.

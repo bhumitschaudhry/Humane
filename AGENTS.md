@@ -148,3 +148,13 @@ Errors must say what happened AND what the user can do about it.
 - [ ] Can I read every name and know what it does?
 - [ ] Is there anything in here I added "just in case"? → Delete it.
 - [ ] Can the person who asked for this change one part of it next week without my help?
+
+---
+
+## Slash Commands
+
+If the user invokes these commands, follow the specific protocols:
+
+- `/humane-spec`: Plan before building. Explore, then produce a structured SPEC block. Wait for approval.
+- `/humane-build`: Code the approved spec. Follow the simplicity rules strictly.
+- `/humanize-codebase`: Audit the codebase for anti-patterns (long functions, generic names, deep nesting) and propose/apply refactors to improve maintainability.
