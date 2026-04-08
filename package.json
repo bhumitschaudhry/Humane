@@ -1,6 +1,6 @@
 {
   "name": "get-humane",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Install the Humane coding skill for AI CLI agents",
   "bin": {
     "get-humane": "bin/install.js",
