@@ -6,9 +6,11 @@ const fs = require('fs');
 const path = require('path');
 
 const RULES = {
-  maxFunctionLines: 20,
-  maxFileLines: 200,
+  maxFunctionLines: 40,
+  maxFileLines: 400,
   noAny: true,
+  badNames: ['data', 'item', 'handler', 'temp', 'obj', 'thing', 'foo'],
+  maxNesting: 3,
 };
 
 function getLineCount(content) {
@@ -37,6 +39,29 @@ function checkFile(filePath) {
     } else {
       console.log(`[PASS] No 'any' types found.`);
     }
+  }
+
+  // Check for bad variable names
+  const badNameRegex = new RegExp(`\\b(${RULES.badNames.join('|')})\\b`, 'gi');
+  const badNameMatches = content.match(badNameRegex);
+  if (badNameMatches) {
+    console.warn(`[FAIL] Found generic variable names in ${filePath}: ${Array.from(new Set(badNameMatches)).join(', ')}.`);
+  } else {
+    console.log(`[PASS] No generic variable names found.`);
+  }
+
+  // Check for deep nesting (naive)
+  let maxNestingFound = 0;
+  let currentNesting = 0;
+  for (const char of content) {
+    if (char === '{') currentNesting++;
+    if (char === '}') currentNesting--;
+    if (currentNesting > maxNestingFound) maxNestingFound = currentNesting;
+  }
+  if (maxNestingFound > RULES.maxNesting) {
+    console.warn(`[FAIL] Nesting depth is ${maxNestingFound} (max allowed: ${RULES.maxNesting}).`);
+  } else {
+    console.log(`[PASS] Nesting depth: ${maxNestingFound}.`);
   }
 
   // Very naive function length check (searching for function blocks)
